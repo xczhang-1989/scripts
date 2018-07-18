@@ -11,6 +11,16 @@ def get_files(dir):
 
     return flist
 
+# get dirs but not recusively
+def get_dirs(dir):
+    list = os.listdir(dir)
+    subdirs = []
+    for d in list:
+        if os.path.isdir(os.path.join(dir, d)):
+            subdirs.append(d)
+
+    return subdirs
+
 
 def classified_by_suffix(flist):
     rlist = []
@@ -49,14 +59,27 @@ def get_results(result, dir, f):
 
 
 if __name__ == "__main__":
-    dir = r"F:\tmp\wrkdir"
-    files = get_files(dir)
-    result = open(r"F:\tmp\wrkdir\result.txt", "w")
+    dir = r"D:\0-WORK\code\vp9\doc\VP9_TEST_RESULT\AI_GOOD\good"
+    result = open(r"D:\0-WORK\code\vp9\doc\VP9_TEST_RESULT\AI_GOOD\good\result.txt", "w")
+    subdirs = get_dirs(dir)
+    if subdirs:
+        for d in subdirs:
+            result.write("***********************\n")
+            result.write("Directtion: " + d + "\n")
+            result.write("***********************\n")
+            files = get_files(os.path.join(dir, d))
+            flist = classified_by_suffix(files)
+            for file in flist:
+                get_results(result, os.path.join(dir, d), file)
+    else:
+        files = get_files(dir)
+        flist = classified_by_suffix(files)
+        for file in flist:
+            get_results(result, dir, file)
 
-    print(files)
-    flist = classified_by_suffix(files)
-    print(flist)
-    for file in flist:
-        get_results(result, dir, file)
 
     result.close()
+
+
+    print("done!!")
+
